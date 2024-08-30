@@ -33,7 +33,7 @@ print(f"Parameter 2: {setStoreFileFormat}")
 # Importiere die Funktion create_reddit_client direkt aus dem Modul
 import pandas as pd
 import asyncpraw 
-import json
+# import json
 
 from Reddit_API_Connector import create_reddit_client, setSubreddit, getPost, get_comments, print_conversion_table
 
