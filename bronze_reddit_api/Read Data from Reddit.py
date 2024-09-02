@@ -390,19 +390,37 @@ if spark.catalog.tableExists(full_table_name):
             spark_df_posts.alias("new"),
             "existing.id = new.id"
         ) \
-        .whenMatchedUpdate(
-            set={
-                "existing.likes": "new.likes",
-                "existing.edited": "new.edited",
-                "existing.mod": "new.mod",
-                "existing.mod_note": "new.mod_note",
-                "existing.mod_reason_title": "new.mod_reason_title",
-                "existing.mod_reason_by": "new.mod_reason_by",
-                "existing.mod_reports": "new.mod_reports"                                       
-            }
+        .whenMatchedUpdateAll(
+            # set={
+            #     "existing.likes": "new.likes",
+            #     "existing.edited": "new.edited",
+            #     "existing.mod": "new.mod",
+            #     "existing.mod_note": "new.mod_note",
+            #     "existing.mod_reason_title": "new.mod_reason_title",
+            #     "existing.mod_reason_by": "new.mod_reason_by",
+            #     "existing.mod_reports": "new.mod_reports",
+            #     "existing.STR_FIELD": "new.STR_FIELD",
+            #     "existing.all_awardings": "new.all_awardings",
+            #     "existing.allow_live_comments": "new.allow_live_comments",  
+            #     "existing.approved_at_utc": "new.approved_at_utc",
+            #     "existing.approved_by": "new.approved_by",
+            #     "existing.archived": "new.archived"                                                              
+            # }
         ) \
         .whenNotMatchedInsertAll() \
         .execute()    
+
+    # Historie der letzten Transaktion abrufen
+    last_operation = delta_table.history(1).collect()[0]
+
+    # Anzahl der eingefügten und aktualisierten Zeilen extrahieren
+    num_added_rows = last_operation['operationMetrics']['numTargetRowsInserted']
+    num_updated_rows = last_operation['operationMetrics']['numTargetRowsUpdated']
+
+    # Logging der Anzahl der betroffenen Zeilen
+    print(f"{num_added_rows} Zeilen wurden eingefügt.")
+    print(f"{num_updated_rows} Zeilen wurden aktualisiert.")
+
 else:    
     # Speichern der Daten als Delta-Tabelle
     spark_df_posts.write.format("delta").saveAsTable(f"{catalog_name}.{schema_name}.{table_name}")
@@ -766,28 +784,39 @@ if spark.catalog.tableExists(full_table_name):
             spark_df_comments.alias("new"),
             "existing.id = new.id"
         ) \
-        .whenMatchedUpdate(
-            set={
-                "existing.likes": "new.likes",
-                "existing.author_is_blocked": "new.author_is_blocked",
-                "existing.mod_reason_title": "new.mod_reason_title",
-                "existing.mod_reason_by": "new.mod_reason_by",
-                "existing.total_awards_received": "new.total_awards_received",
-                "existing.archived": "new.archived",
-                "existing.send_replies": "new.send_replies",
-                "existing.score": "new.score",
-                "existing.mod_note": "new.mod_note",
-                "existing.edited": "new.edited",
-                "existing.removal_reason": "new.removal_reason",
-                "existing.collapsed_reason": "new.collapsed_reason",
-                "existing.score_hidden": "new.score_hidden",
-                "existing.mod_reports": "new.mod_reports",
-                "existing.locked": "new.locked",
-                "existing.report_reasons": "new.report_reasons"
-            }
+        .whenMatchedUpdateAll(
+            # set={
+            #     "existing.likes": "new.likes",
+            #     "existing.author_is_blocked": "new.author_is_blocked",
+            #     "existing.mod_reason_title": "new.mod_reason_title",
+            #     "existing.mod_reason_by": "new.mod_reason_by",
+            #     "existing.total_awards_received": "new.total_awards_received",
+            #     "existing.archived": "new.archived",
+            #     "existing.send_replies": "new.send_replies",
+            #     "existing.score": "new.score",
+            #     "existing.mod_note": "new.mod_note",
+            #     "existing.edited": "new.edited",
+            #     "existing.removal_reason": "new.removal_reason",
+            #     "existing.collapsed_reason": "new.collapsed_reason",
+            #     "existing.score_hidden": "new.score_hidden",
+            #     "existing.mod_reports": "new.mod_reports",
+            #     "existing.locked": "new.locked",
+            #     "existing.report_reasons": "new.report_reasons"
+            # }
         ) \
         .whenNotMatchedInsertAll() \
-        .execute()    
+        .execute()
+
+    # Historie der letzten Transaktion abrufen
+    last_operation = delta_table.history(1).collect()[0]
+
+    # Anzahl der eingefügten und aktualisierten Zeilen extrahieren
+    num_added_rows = last_operation['operationMetrics']['numTargetRowsInserted']
+    num_updated_rows = last_operation['operationMetrics']['numTargetRowsUpdated']
+
+    # Logging der Anzahl der betroffenen Zeilen
+    print(f"{num_added_rows} Zeilen wurden eingefügt.")
+    print(f"{num_updated_rows} Zeilen wurden aktualisiert.")            
 else:    
     # Speichern der Daten als Delta-Tabelle
     spark_df_comments.write.format("delta").saveAsTable(f"{catalog_name}.{schema_name}.{table_name}")
