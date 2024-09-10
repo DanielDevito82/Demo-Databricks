@@ -4,6 +4,10 @@
 
 # COMMAND ----------
 
+
+
+# COMMAND ----------
+
 catalog = "portfolio_analyse"
 schema_to_extract = "bronze_reddit_deltatable"
 schema_to_store = "silver_social_media"
@@ -133,7 +137,7 @@ print(union_query)
 result_union_df = spark.sql(union_query)
 
 # Speichern des DataFrames als Delta-Tabelle
-result_union_df.write.format("delta").saveAsTable(f"{catalog}.{schema_to_store}.t_Reddit_Posts")
+result_union_df.write.mode("overwrite").saveAsTable(f"{catalog}.{schema_to_store}.t_Reddit_Posts")
 
 # COMMAND ----------
 
@@ -165,7 +169,7 @@ print(union_query)
 result_union_df = spark.sql(union_query)
 
 # Speichern des DataFrames als Delta-Tabelle
-result_union_df.write.format("delta").saveAsTable(f"{catalog}.{schema_to_store}.t_Reddit_Comments")
+result_union_df.write.mode("overwrite").saveAsTable(f"{catalog}.{schema_to_store}.t_Reddit_Comments")
 
 # COMMAND ----------
 
