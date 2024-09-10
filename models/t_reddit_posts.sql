@@ -1,0 +1,2 @@
+SELECT id
+FROM portfolio_analyse.silver_social_media.t_reddit_posts
