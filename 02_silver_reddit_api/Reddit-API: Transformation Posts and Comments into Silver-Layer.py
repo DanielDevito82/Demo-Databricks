@@ -123,7 +123,7 @@ print(table_names)  # Liste der Tabellennamen anzeigen
 # COMMAND ----------
 
 # Erstelle dynamisch den SQL UNION ALL Befehl
-union_query = " UNION ALL ".join([f" SELECT {', '.join(fields_posts)} FROM {catalog}.{schema_to_extract}.{table_name}" for table_name in table_names])
+union_query = " UNION ".join([f" SELECT {', '.join(fields_posts)} FROM {catalog}.{schema_to_extract}.{table_name}" for table_name in table_names])
 print(union_query)
 
 # COMMAND ----------
