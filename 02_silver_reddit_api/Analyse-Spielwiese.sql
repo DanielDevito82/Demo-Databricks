@@ -1,7 +1,20 @@
 -- Databricks notebook source
+SELECT
+  count(*)
+FROM portfolio_analyse.bronze_reddit_deltatable.union_posts_reddit_api
+
+-- COMMAND ----------
+
+SELECT 
+  gildings
+  FROM
+portfolio_analyse.bronze_reddit_deltatable.t_subreddit_bigdata_posts
+
+-- COMMAND ----------
+
 SELECT 
   count(*)
-FROM portfolio_analyse.default.t_reddit_posts2
+FROM portfolio_analyse.default.t_reddit_posts
 
 -- COMMAND ----------
 
