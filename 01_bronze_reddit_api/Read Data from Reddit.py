@@ -35,7 +35,7 @@ import pandas as pd
 import asyncpraw 
 # import json
 
-from Reddit_API_Connector import create_reddit_client, setSubreddit, getPost, get_comments, print_conversion_table
+from Reddit_API_Connector import create_reddit_client, set_Subreddit, get_Post, get_Comments, print_conversion_table
 
 from datetime import datetime
 
@@ -78,7 +78,7 @@ reddit = await create_reddit_client()
 # COMMAND ----------
 
 # Set Channel
-subreddit = await setSubreddit(reddit, setChannel)
+subreddit = await set_Subreddit(reddit, setChannel)
 
 # COMMAND ----------
 
@@ -88,7 +88,7 @@ subreddit = await setSubreddit(reddit, setChannel)
 # COMMAND ----------
 
 # Get Posts
-posts, headers = await getPost(subreddit)
+posts, headers = await get_Post(subreddit)
 
 # COMMAND ----------
 
@@ -99,7 +99,7 @@ posts, headers = await getPost(subreddit)
 
 comments = []
 for post in posts:
-  comment = await get_comments(reddit, post['id'])
+  comment = await get_Comments(reddit, post['id'])
   comments.append(comment)
 
 # COMMAND ----------
