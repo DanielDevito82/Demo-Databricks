@@ -13,7 +13,8 @@ from pyspark.sql.functions import concat, lit
 
 catalog = "portfolio_analyse"
 schema_to_extract = "bronze_reddit_deltatable"
-schema_to_store = "silver_social_media"
+schema_to_store_silver = "silver_social_media_by_databricks"
+schema_to_store_gold = "gold_social_media_by_databricks"
 
 # COMMAND ----------
 
@@ -116,6 +117,10 @@ fields_comments = [
 
 # MAGIC %md
 # MAGIC ## Logik zum Zusammenführen aller *Posts Tabellen inkl. Verarbeitungslogik
+
+# COMMAND ----------
+
+# spark.sql("USE silver_social_media_by_databrick")
 
 # COMMAND ----------
 
@@ -245,6 +250,10 @@ def union_comments_for_silver():
 
 # MAGIC %md
 # MAGIC ## Join tables to view
+
+# COMMAND ----------
+
+# spark.sql("USE gold_social_media_by_databricks")
 
 # COMMAND ----------
 

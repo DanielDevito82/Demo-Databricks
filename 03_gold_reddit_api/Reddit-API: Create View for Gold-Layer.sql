@@ -2,7 +2,7 @@
 SELECT 
  link_id,
  body
-FROM portfolio_analyse.silver_social_media.t_reddit_comments
+FROM portfolio_analyse.silver_social_media_by_databricks.t_reddit_comments
 WHERE link_id = "t3_1edrq0b"
 
 -- COMMAND ----------
@@ -11,15 +11,15 @@ SELECT
  id,
  shortlink,
  CONCAT('t3_', id) AS _KEY_LINK_POSTS_COMMENTS
-FROM portfolio_analyse.silver_social_media.t_reddit_posts
+FROM portfolio_analyse.silver_social_media_by_databricks.t_reddit_posts
 WHERE id = "1edrq0b"
 
 -- COMMAND ----------
 
 -- MAGIC %python
 -- MAGIC # Lesen der Spaltennamen aus tabelle1 und tabelle2
--- MAGIC posts_columns = spark.table("portfolio_analyse.silver_social_media.t_reddit_posts").columns
--- MAGIC comments_columns = spark.table("portfolio_analyse.silver_social_media.t_reddit_comments").columns
+-- MAGIC posts_columns = spark.table("portfolio_analyse.silver_social_media_by_databricks.t_reddit_posts").columns
+-- MAGIC comments_columns = spark.table("portfolio_analyse.silver_social_media_by_databricks.t_reddit_comments").columns
 -- MAGIC
 -- MAGIC # Erstellen der dynamischen SELECT-Klausel
 -- MAGIC select_clause = []
@@ -38,10 +38,10 @@ WHERE id = "1edrq0b"
 -- MAGIC %python
 -- MAGIC # Erstellen der vollständigen SQL-Abfrage
 -- MAGIC sql_query = f"""
--- MAGIC CREATE VIEW IF NOT EXISTS portfolio_analyse.gold_social_media_by_databricks.v_reddit_posts_comments AS
+-- MAGIC CREATE OR REPLACE VIEW portfolio_analyse.gold_social_media_by_databricks.v_reddit_posts_comments AS
 -- MAGIC SELECT {select_clause_str}
--- MAGIC FROM portfolio_analyse.silver_social_media.t_reddit_posts AS posts
--- MAGIC LEFT JOIN portfolio_analyse.silver_social_media.t_reddit_comments AS comments
+-- MAGIC FROM portfolio_analyse.silver_social_media_by_databricks.t_reddit_posts AS posts
+-- MAGIC LEFT JOIN portfolio_analyse.silver_social_media_by_databricks.t_reddit_comments AS comments
 -- MAGIC ON comments.link_id = CONCAT('t3_', posts.id)
 -- MAGIC """
 

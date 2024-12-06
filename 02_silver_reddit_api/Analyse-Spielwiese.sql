@@ -1,7 +1,56 @@
 -- Databricks notebook source
+CREATE OR REPLACE TABLE portfolio_analyse.silver_social_media_by_databricks.t_reddit_posts_ai
+AS
+SELECT 
+  *,
+  portfolio_analyse.functions.analyze_for_software_product_opionion(selftext) AS sentiment
+FROM portfolio_analyse.silver_social_media_by_databricks.t_reddit_posts
+
+-- COMMAND ----------
+
+-- MAGIC %python
+-- MAGIC df =  spark.sql(""
+-- MAGIC SELECT
+-- MAGIC  link_id,
+-- MAGIC  id,
+-- MAGIC  parent_id,
+-- MAGIC  subreddit_id,
+-- MAGIC  permalink
+-- MAGIC FROM portfolio_analyse.silver_social_media_by_databricks.t_reddit_comments
+-- MAGIC WHERE parent_id = 't3_1f25xuj'"
+-- MAGIC )
+
+-- COMMAND ----------
+
 SELECT
-  count(*)
-FROM portfolio_analyse.bronze_reddit_deltatable.union_posts_reddit_api
+    portfolio_analyse.functions.analyze_for_software_product_opionion("I don't like Databricks. Is Snowflake better?") AS sentiment
+
+-- COMMAND ----------
+
+ALTER TABLE portfolio_analyse.silver_social_media_by_dbt.t_reddit_comments ALTER COLUMN id SET NOT NULL
+
+-- COMMAND ----------
+
+ALTER TABLE portfolio_analyse.silver_social_media_by_dbt.t_reddit_comments ADD CONSTRAINT KEY_COMMENTS PRIMARY KEY(id)
+
+-- COMMAND ----------
+
+ALTER TABLE portfolio_analyse.silver_social_media_by_dbt.t_reddit_comments DROP CONSTRAINT PRIMARY KEY
+
+-- COMMAND ----------
+
+ALTER TABLE portfolio_analyse.silver_social_media_by_dbt.t_reddit_posts ALTER COLUMN id SET NOT NULL
+
+-- COMMAND ----------
+
+ALTER TABLE portfolio_analyse.silver_social_media_by_dbt.t_reddit_posts ADD CONSTRAINT KEY_POSTS PRIMARY KEY(id)
+
+-- COMMAND ----------
+
+SELECT
+  count(id)
+FROM portfolio_analyse.silver_social_media_by_dbt.t_reddit_comments
+WHERE id is NULL
 
 -- COMMAND ----------
 
@@ -61,55 +110,6 @@ UPDATE portfolio_analyse.bronze_reddit_deltatable.t_subreddit_dataanalyst_posts
  SET author_is_blocked = 'true'
 WHERE author = 'Vegetable-Cucumber26'
 
-
--- COMMAND ----------
-
--- MAGIC %python
--- MAGIC # Definiere die Felder und Verarbeitung, die du auswählen möchtest zum Speichern für Posts
--- MAGIC fields_posts = [
--- MAGIC     # "author",
--- MAGIC     # "author_premium",
--- MAGIC     #  "author_is_blocked",
--- MAGIC     #  "approved_by",
--- MAGIC     # "cast(approved_at_utc AS TIMESTAMP) AS approved_at_utc",
--- MAGIC     #  "category",
--- MAGIC     # "cast(created AS TIMESTAMP) AS created",
--- MAGIC     # "cast(created_utc AS TIMESTAMP) AS created_utc",
--- MAGIC     # "cast(edited AS TIMESTAMP) AS edited",
--- MAGIC     # "fullname",
--- MAGIC     # "id",
--- MAGIC     # "mod_note",
--- MAGIC     # "mod_reason_by",
--- MAGIC     # "mod_reason_title",
--- MAGIC     # "mod_reports",
--- MAGIC     # "name",
--- MAGIC     # "num_comments",
--- MAGIC     # "num_crossposts",
--- MAGIC     # "num_reports",
--- MAGIC     # "over_18",
--- MAGIC     # "parent_whitelist_status",
--- MAGIC     # "removal_reason",
--- MAGIC     # "removed_by",
--- MAGIC     # "removed_by_category",
--- MAGIC     # "report_reasons",
--- MAGIC     # "score",
--- MAGIC     # "selftext",
--- MAGIC     # "shortlink",
--- MAGIC     # "subreddit",
--- MAGIC     # "subreddit_id",
--- MAGIC     # "subreddit_name_prefixed",
--- MAGIC     # "subreddit_subscribers",
--- MAGIC     # "subreddit_type",
--- MAGIC     # "suggested_sort",
--- MAGIC     # "title",
--- MAGIC     # "top_awarded_type",
--- MAGIC     # "total_awards_received",
--- MAGIC     # "url",
--- MAGIC     # "user_reports",
--- MAGIC     # "view_count",
--- MAGIC     # "visited",
--- MAGIC     # "whitelist_status"
--- MAGIC ]
 
 -- COMMAND ----------
 
